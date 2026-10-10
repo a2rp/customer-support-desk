@@ -20,7 +20,7 @@ const InboxPage = () => {
     const [replyType, setReplyType] = useState("reply");
     const [mobileView, setMobileView] = useState(false);
     const [savedRepliesOpen, setSavedRepliesOpen] = useState(false);
-    const ticketItemsRef = useRef(null);
+    const inboxGridRef = useRef(null);
     const selectedId = requestedTicket || localSelectedId;
     const mobileConversation = Boolean(requestedTicket) || mobileView;
     const query = globalSearch ?? localQuery;
@@ -67,17 +67,28 @@ const InboxPage = () => {
     }, [markTicketRead, selected]);
 
     useEffect(() => {
-        const ticketItems = ticketItemsRef.current;
-        if (!ticketItems) return undefined;
+        const inboxGrid = inboxGridRef.current;
+        if (!inboxGrid) return undefined;
 
-        const forwardWheelAtListBoundary = (event) => {
+        const forwardWheelAtPaneBoundary = (event) => {
             if (event.ctrlKey || event.deltaY === 0) return;
 
-            const listMaxScroll = ticketItems.scrollHeight - ticketItems.clientHeight;
-            const listCanScroll = event.deltaY > 0
-                ? ticketItems.scrollTop < listMaxScroll
-                : ticketItems.scrollTop > 0;
-            if (listCanScroll) return;
+            const target = event.target instanceof Element ? event.target : event.target?.parentElement;
+            if (target?.closest("input, select, textarea, [contenteditable='true']")) return;
+
+            let nestedScrollPane = false;
+            for (let element = target; element && element !== inboxGrid; element = element.parentElement) {
+                const overflowY = window.getComputedStyle(element).overflowY;
+                if (overflowY !== "auto" && overflowY !== "scroll") continue;
+
+                nestedScrollPane = true;
+                const maxScroll = Math.max(0, element.scrollHeight - element.clientHeight);
+                const paneCanScroll = event.deltaY > 0
+                    ? element.scrollTop < maxScroll
+                    : element.scrollTop > 0;
+                if (paneCanScroll) return;
+            }
+            if (!nestedScrollPane) return;
 
             const pageScroller = document.scrollingElement;
             if (!pageScroller) return;
@@ -97,8 +108,8 @@ const InboxPage = () => {
             pageScroller.scrollTop = nextPageTop;
         };
 
-        ticketItems.addEventListener("wheel", forwardWheelAtListBoundary, { passive: false });
-        return () => ticketItems.removeEventListener("wheel", forwardWheelAtListBoundary);
+        inboxGrid.addEventListener("wheel", forwardWheelAtPaneBoundary, { passive: false });
+        return () => inboxGrid.removeEventListener("wheel", forwardWheelAtPaneBoundary);
     }, []);
 
     const selectTicket = (ticket) => {
@@ -137,7 +148,7 @@ const InboxPage = () => {
                 <div><p>SUPPORT WORKSPACE <FiArrowUpRight aria-hidden="true" /></p><h1>Inbox</h1><span>Make every customer conversation feel taken care of.</span></div>
                 <div className={styles.headingStats}><span><strong>{tickets.filter((ticket) => ticket.status !== "Closed").length}</strong> open conversations</span><span><i /> {tickets.filter((ticket) => !ticket.assignedTo && ticket.status !== "Closed").length} need an owner</span></div>
             </header>
-            <div className={styles.inboxGrid} data-mobile-conversation={mobileConversation}>
+            <div className={styles.inboxGrid} data-mobile-conversation={mobileConversation} ref={inboxGridRef}>
                 <aside aria-label="Ticket queues" className={styles.queuePanel}>
                     <div className={styles.queueHeading}><strong>Queues</strong><button aria-label="Create a ticket" onClick={() => openDialog("ticketForm")} type="button"><FiPlus aria-hidden="true" /></button></div>
                     <div className={styles.queueList}>
@@ -160,7 +171,7 @@ const InboxPage = () => {
                         {["All", "Open", "Pending", "Closed"].map((status) => <button aria-pressed={statusFilter === status} className={statusFilter === status ? styles.statusActive : styles.statusTab} key={status} onClick={() => setStatusFilter(status)} type="button">{status}<small>{statusCounts[status]}</small></button>)}
                     </div>
                     <div className={styles.mobileQueue}><label>Queue<select onChange={(event) => selectQueue(event.target.value)} value={queue}><option value="all">All tickets</option><option value="mine">Assigned to me</option><option value="unassigned">Unassigned</option><option value="urgent">Urgent</option><option value="pending">Waiting on customer</option><option value="closed">Resolved</option></select></label></div>
-                    <div className={styles.ticketItems} ref={ticketItemsRef}>
+                    <div className={styles.ticketItems}>
                         {visibleTickets.length ? visibleTickets.map((ticket) => {
                             const person = getCustomer(customers, ticket.customerId);
                             const lastMessage = ticket.messages.at(-1);
