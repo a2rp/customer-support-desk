@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FiArrowLeft, FiArrowUpRight, FiCheck, FiClock, FiCornerDownLeft, FiFlag, FiInbox, FiMail, FiMessageCircle, FiPlus, FiSearch, FiSend, FiShield, FiTag, FiTrash2, FiUser, FiUsers, FiZap } from "react-icons/fi";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useApp } from "../../context/useApp.js";
@@ -20,6 +20,7 @@ const InboxPage = () => {
     const [replyType, setReplyType] = useState("reply");
     const [mobileView, setMobileView] = useState(false);
     const [savedRepliesOpen, setSavedRepliesOpen] = useState(false);
+    const ticketItemsRef = useRef(null);
     const selectedId = requestedTicket || localSelectedId;
     const mobileConversation = Boolean(requestedTicket) || mobileView;
     const query = globalSearch ?? localQuery;
@@ -64,6 +65,41 @@ const InboxPage = () => {
     useEffect(() => {
         if (selected?.unread) markTicketRead(selected.id);
     }, [markTicketRead, selected]);
+
+    useEffect(() => {
+        const ticketItems = ticketItemsRef.current;
+        if (!ticketItems) return undefined;
+
+        const forwardWheelAtListBoundary = (event) => {
+            if (event.ctrlKey || event.deltaY === 0) return;
+
+            const listMaxScroll = ticketItems.scrollHeight - ticketItems.clientHeight;
+            const listCanScroll = event.deltaY > 0
+                ? ticketItems.scrollTop < listMaxScroll
+                : ticketItems.scrollTop > 0;
+            if (listCanScroll) return;
+
+            const pageScroller = document.scrollingElement;
+            if (!pageScroller) return;
+
+            const delta = event.deltaMode === 1
+                ? event.deltaY * 16
+                : event.deltaMode === 2
+                    ? event.deltaY * window.innerHeight
+                    : event.deltaY;
+            const nextPageTop = Math.max(0, Math.min(
+                pageScroller.scrollHeight - pageScroller.clientHeight,
+                pageScroller.scrollTop + delta,
+            ));
+            if (nextPageTop === pageScroller.scrollTop) return;
+
+            event.preventDefault();
+            pageScroller.scrollTop = nextPageTop;
+        };
+
+        ticketItems.addEventListener("wheel", forwardWheelAtListBoundary, { passive: false });
+        return () => ticketItems.removeEventListener("wheel", forwardWheelAtListBoundary);
+    }, []);
 
     const selectTicket = (ticket) => {
         setLocalSelectedId(ticket.id);
@@ -124,7 +160,7 @@ const InboxPage = () => {
                         {["All", "Open", "Pending", "Closed"].map((status) => <button aria-pressed={statusFilter === status} className={statusFilter === status ? styles.statusActive : styles.statusTab} key={status} onClick={() => setStatusFilter(status)} type="button">{status}<small>{statusCounts[status]}</small></button>)}
                     </div>
                     <div className={styles.mobileQueue}><label>Queue<select onChange={(event) => selectQueue(event.target.value)} value={queue}><option value="all">All tickets</option><option value="mine">Assigned to me</option><option value="unassigned">Unassigned</option><option value="urgent">Urgent</option><option value="pending">Waiting on customer</option><option value="closed">Resolved</option></select></label></div>
-                    <div className={styles.ticketItems}>
+                    <div className={styles.ticketItems} ref={ticketItemsRef}>
                         {visibleTickets.length ? visibleTickets.map((ticket) => {
                             const person = getCustomer(customers, ticket.customerId);
                             const lastMessage = ticket.messages.at(-1);
