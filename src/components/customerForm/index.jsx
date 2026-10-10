@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { FiUserPlus } from "react-icons/fi";
-import { useApp } from "../../context/useApp.js";
 import Modal from "../modal";
 import styles from "./styles.module.css";
 
@@ -9,7 +8,6 @@ const emptyCustomer = { name: "", email: "", company: "", plan: "Growth", locati
 const CustomerForm = ({ customer, onClose, onSave }) => {
     const [values, setValues] = useState(customer ? { ...customer } : emptyCustomer);
     const [error, setError] = useState("");
-    const { addToast } = useApp();
     const setField = (field) => (event) => setValues((current) => ({ ...current, [field]: event.target.value }));
 
     const submit = (event) => {
@@ -18,7 +16,6 @@ const CustomerForm = ({ customer, onClose, onSave }) => {
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim())) return setError("Enter a valid email address.");
         if (values.company.trim().length < 2) return setError("Enter a company name.");
         onSave({ ...values, name: values.name.trim(), email: values.email.trim(), company: values.company.trim(), location: values.location.trim(), notes: values.notes.trim() });
-        addToast(customer ? "Customer details updated" : "Customer added to the desk");
     };
 
     return (
