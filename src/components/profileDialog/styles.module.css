@@ -1,0 +1,63 @@
+.profile {
+    display: grid;
+    gap: 20px;
+
+    .identity {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        > span:last-child { display: grid; gap: 4px; }
+        strong { color: var(--color-ink); font-size: 15px; }
+        small { color: var(--color-muted); font-size: 13px; }
+    }
+
+    .avatar { display: grid; width: 44px; height: 44px; border-radius: 14px; color: #fff; background: linear-gradient(145deg, #f0a479, #cc6f66); place-items: center; }
+
+    .field {
+        display: grid;
+        gap: 7px;
+        color: #44506b;
+        font-size: 14px;
+        font-weight: 650;
+
+        select { min-height: 44px; padding: 0 12px; border: 1px solid var(--color-border); border-radius: 11px; color: var(--color-ink); background: #fff; font-size: 14px; }
+    }
+
+    .preferences { display: grid; border-top: 1px solid var(--color-border); }
+
+    .preferences label {
+        display: flex;
+        min-height: 70px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        border-bottom: 1px solid var(--color-border);
+        cursor: pointer;
+
+        > span { display: grid; gap: 5px; }
+        strong { color: #3d4965; font-size: 14px; }
+        small { color: var(--color-muted); font-size: 13px; line-height: 1.4; }
+        input { width: 19px; height: 19px; accent-color: var(--color-primary); }
+    }
+
+    .note { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--color-muted); font-size: 13px; }
+    .note svg { width: 16px; height: 16px; flex: 0 0 16px; color: var(--color-teal); }
+
+    .done {
+        justify-self: end;
+        min-height: 42px;
+        padding: 0 18px;
+        border: 1px solid var(--color-primary);
+        border-radius: 11px;
+        color: #fff;
+        background: var(--color-primary);
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 650;
+        transition: border-color 150ms ease, box-shadow 150ms ease;
+
+        &:hover,
+        &:focus-visible { border-color: var(--color-primary-dark); box-shadow: 0 0 0 4px rgb(49 89 223 / 14%); }
+    }
+}
