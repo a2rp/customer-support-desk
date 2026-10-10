@@ -1,0 +1,69 @@
+.confirm {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+
+    .warning {
+        display: grid;
+        width: 54px;
+        height: 54px;
+        border-radius: 17px;
+        color: #bb5d1a;
+        background: #fff2e4;
+        place-items: center;
+
+        svg {
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+    > p {
+        margin: 13px 0 23px;
+        color: var(--color-muted);
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .actions {
+        display: flex;
+        width: 100%;
+        justify-content: flex-end;
+        gap: 9px;
+    }
+
+    .cancelButton,
+    .deleteButton {
+        display: inline-flex;
+        min-height: 42px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 0 16px;
+        border: 1px solid var(--color-border);
+        border-radius: 11px;
+        background: #fff;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 650;
+        transition: border-color 150ms ease, box-shadow 150ms ease;
+
+        &:hover,
+        &:focus-visible {
+            border-color: #aebbe0;
+            box-shadow: 0 0 0 4px rgb(49 89 223 / 9%);
+        }
+    }
+
+    .deleteButton {
+        border-color: #d94a57;
+        color: #fff;
+        background: #d94a57;
+
+        &:hover,
+        &:focus-visible {
+            border-color: #b92f3c;
+            box-shadow: 0 0 0 4px rgb(217 74 87 / 13%);
+        }
+    }
+}
