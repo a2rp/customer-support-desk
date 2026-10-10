@@ -1,0 +1,21 @@
+.avatar {
+    display: inline-grid;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    color: #384465;
+    background: #edf1ff;
+    font-size: 13px;
+    font-weight: 750;
+    letter-spacing: -0.02em;
+    place-items: center;
+
+    &[data-color="lilac"] { color: #674b98; background: #eee6fa; }
+    &[data-color="blue"] { color: #3f60a6; background: #e6efff; }
+    &[data-color="peach"] { color: #a4543d; background: #ffebe2; }
+    &[data-color="mint"] { color: #247667; background: #e1f5ee; }
+    &[data-color="rose"] { color: #984f70; background: #f9e7ee; }
+    &[data-color="sand"] { color: #84652d; background: #f7efd9; }
+}
