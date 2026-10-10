@@ -1,0 +1,112 @@
+.form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+
+    label {
+        display: grid;
+        gap: 7px;
+        color: #44506b;
+        font-size: 14px;
+        font-weight: 650;
+    }
+
+    input,
+    select,
+    textarea {
+        width: 100%;
+        min-height: 43px;
+        padding: 10px 12px;
+        border: 1px solid #dfe4ef;
+        border-radius: 11px;
+        outline: none;
+        color: var(--color-ink);
+        background: #fff;
+        font-size: 14px;
+        font-weight: 450;
+        transition: border-color 150ms ease, box-shadow 150ms ease;
+
+        &:focus {
+            border-color: #91a8ef;
+            box-shadow: 0 0 0 4px rgb(49 89 223 / 10%);
+        }
+    }
+
+    textarea {
+        min-height: 90px;
+        resize: vertical;
+        line-height: 1.5;
+    }
+
+    .wide,
+    .error,
+    .actions {
+        grid-column: 1 / -1;
+    }
+
+    .error {
+        margin: 0;
+        color: #b73544;
+        font-size: 14px;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 9px;
+        padding-top: 3px;
+    }
+
+    .cancel,
+    .submit {
+        display: inline-flex;
+        min-height: 43px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 0 15px;
+        border: 1px solid #dfe4ef;
+        border-radius: 11px;
+        background: #fff;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 650;
+        transition: border-color 150ms ease, box-shadow 150ms ease;
+
+        &:hover,
+        &:focus-visible {
+            border-color: #9aabe0;
+            box-shadow: 0 0 0 4px rgb(49 89 223 / 9%);
+        }
+    }
+
+    .submit {
+        border-color: var(--color-primary);
+        color: #fff;
+        background: var(--color-primary);
+
+        &:hover,
+        &:focus-visible {
+            border-color: var(--color-primary-dark);
+            box-shadow: 0 0 0 4px rgb(49 89 223 / 14%);
+        }
+    }
+
+    @media (max-width: 560px) {
+        grid-template-columns: minmax(0, 1fr);
+
+        .wide,
+        .error,
+        .actions {
+            grid-column: auto;
+        }
+
+        .actions {
+            .cancel,
+            .submit {
+                flex: 1;
+                padding: 0 10px;
+            }
+        }
+    }
+}
