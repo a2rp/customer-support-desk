@@ -36,6 +36,7 @@ const AppProvider = ({ children }) => {
     const [activity, setActivity] = useState([]);
     const [agent, setAgent] = useState(currentAgent);
     const [teamSettings, setTeamSettings] = useState({ showSla: true, autoAssign: false });
+    const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
     const addToast = (message, type = "success") => {
         const id = makeId("toast");
@@ -101,7 +102,7 @@ const AppProvider = ({ children }) => {
         addToast(`Ticket ${id} removed`, "info");
     };
 
-    const value = { customers, tickets, toasts, dialog, activity, agent, agents: initialAgents, teamSettings, setTeamSettings, setAgent, addToast, dismissToast, openDialog, closeDialog, addCustomer, updateCustomer, deleteCustomer, addTicket, addMessage, updateTicket, markTicketRead, deleteTicket };
+    const value = { customers, tickets, toasts, dialog, activity, agent, agents: initialAgents, teamSettings, setTeamSettings, setAgent, mobileNavOpen, setMobileNavOpen, addToast, dismissToast, openDialog, closeDialog, addCustomer, updateCustomer, deleteCustomer, addTicket, addMessage, updateTicket, markTicketRead, deleteTicket };
     return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 
