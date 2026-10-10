@@ -1,0 +1,171 @@
+.backdrop {
+    display: none;
+}
+
+.sidebar,
+.sidebarOpen {
+    position: fixed;
+    z-index: 40;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    width: 220px;
+    flex-direction: column;
+    padding: 22px 14px 15px;
+    color: #c8d0e5;
+    background: #18233f;
+    box-shadow: 12px 0 36px rgb(20 30 55 / 7%);
+
+    .brand {
+        display: flex;
+        min-height: 62px;
+        align-items: center;
+        gap: 12px;
+        padding: 0 8px 22px;
+        color: #fff;
+
+        > span:last-child { display: grid; gap: 3px; }
+        strong { font-size: 22px; font-weight: 800; letter-spacing: -0.05em; }
+        strong span { color: #65d9bd; }
+        small { color: #8793b1; font-size: 13px; font-weight: 650; letter-spacing: 0.1em; }
+    }
+
+    .brandIcon {
+        display: grid;
+        width: 42px;
+        height: 42px;
+        border: 1px solid rgb(255 255 255 / 13%);
+        border-radius: 14px;
+        color: #fff;
+        background: linear-gradient(145deg, #4769ec, #3155c8);
+        box-shadow: 0 8px 18px rgb(49 89 223 / 28%);
+        place-items: center;
+
+        svg { width: 21px; height: 21px; }
+    }
+
+    .sectionLabel {
+        padding: 16px 11px 9px;
+        color: #8793b1;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+    }
+
+    .navigation { display: grid; gap: 5px; }
+
+    .link,
+    .activeLink {
+        display: flex;
+        min-height: 45px;
+        align-items: center;
+        gap: 12px;
+        padding: 0 11px;
+        border: 1px solid transparent;
+        border-radius: 11px;
+        color: #aeb8d1;
+        font-size: 14px;
+        font-weight: 620;
+        transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+
+        > svg { width: 18px; height: 18px; color: #9aa6c3; }
+        > span { flex: 1; }
+        small { display: grid; min-width: 24px; height: 23px; padding: 0 6px; border-radius: 7px; color: #c8d2ed; background: rgb(255 255 255 / 9%); font-size: 13px; font-weight: 700; place-items: center; }
+
+        &:hover,
+        &:focus-visible { border-color: rgb(255 255 255 / 10%); color: #fff; background: rgb(255 255 255 / 7%); }
+    }
+
+    .activeLink {
+        border-color: rgb(124 153 255 / 20%);
+        color: #fff;
+        background: linear-gradient(90deg, rgb(72 105 220 / 34%), rgb(72 105 220 / 16%));
+
+        > svg { color: #a9baff; }
+        small { color: #fff; background: #3d5dcc; }
+    }
+
+    .queueCard {
+        display: flex;
+        min-height: 64px;
+        align-items: center;
+        gap: 10px;
+        margin-top: 28px;
+        padding: 10px;
+        border: 1px solid rgb(255 255 255 / 9%);
+        border-radius: 13px;
+        background: rgb(255 255 255 / 5%);
+
+        > span:nth-child(2) { display: grid; min-width: 0; flex: 1; gap: 4px; }
+        strong { color: #edf1ff; font-size: 14px; font-weight: 650; }
+        small { color: #99a5c2; font-size: 13px; }
+        i { width: 7px; height: 7px; flex: 0 0 7px; border-radius: 50%; background: #5cd4a8; }
+    }
+
+    .queueIcon { display: grid; width: 33px; height: 33px; flex: 0 0 33px; border-radius: 10px; color: #bac8ff; background: rgb(93 122 230 / 22%); place-items: center; }
+    .queueIcon svg { width: 16px; height: 16px; }
+
+    .sidebarBottom { display: grid; gap: 12px; margin-top: auto; }
+
+    .teamStatus {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 11px 9px;
+        color: #9da9c5;
+        font-size: 13px;
+
+        > span:first-child { width: 7px; height: 7px; border-radius: 50%; background: #5cd4a8; }
+    }
+
+    .agentButton {
+        display: flex;
+        min-height: 64px;
+        align-items: center;
+        gap: 10px;
+        padding: 9px;
+        border: 1px solid rgb(255 255 255 / 9%);
+        border-radius: 13px;
+        color: #fff;
+        background: rgb(255 255 255 / 5%);
+        cursor: pointer;
+        text-align: left;
+        transition: border-color 150ms ease, box-shadow 150ms ease;
+
+        &:hover,
+        &:focus-visible { border-color: rgb(160 178 255 / 35%); box-shadow: 0 0 0 4px rgb(92 121 225 / 12%); }
+
+        > span:nth-child(2) { display: grid; flex: 1; gap: 4px; }
+        strong { font-size: 14px; font-weight: 650; }
+        small { color: #99a5c2; font-size: 13px; }
+    }
+
+    .agentAvatar { display: grid; width: 36px; height: 36px; flex: 0 0 36px; border-radius: 12px; color: #fff; background: linear-gradient(145deg, #f0a479, #cc6f66); font-size: 13px; font-weight: 750; place-items: center; }
+    .closeIcon { display: none; }
+
+    @media (max-width: 720px) {
+        width: min(290px, calc(100vw - 48px));
+        padding-top: 13px;
+        box-shadow: 16px 0 44px rgb(10 19 38 / 25%);
+        transform: translateX(-105%);
+        transition: transform 190ms ease;
+
+        .brand { padding-top: 5px; }
+    }
+}
+
+.sidebarOpen {
+    @media (max-width: 720px) {
+        transform: translateX(0);
+    }
+}
+
+.backdropOpen {
+    position: fixed;
+    z-index: 39;
+    inset: 0;
+    display: block;
+    border: 0;
+    background: rgb(13 21 40 / 45%);
+}
