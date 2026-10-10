@@ -30,6 +30,15 @@ const ReportsPage = () => {
         { name: "Pending", count: totals.pending, color: "#e3a43c" },
         { name: "Resolved", count: totals.closed, color: "#26a283" },
     ];
+    let statusStart = 0;
+    const statusGradient = reportTickets.length
+        ? `conic-gradient(${statusData.map((item) => {
+            const statusEnd = statusStart + (item.count / reportTickets.length) * 100;
+            const segment = `${item.color} ${statusStart}% ${statusEnd}%`;
+            statusStart = statusEnd;
+            return segment;
+        }).join(", ")})`
+        : "conic-gradient(#e8ecf4 0 100%)";
     const ticketVolume = useMemo(() => {
         const latest = tickets.length ? new Date(Math.max(...tickets.map((ticket) => new Date(ticket.createdAt).getTime()))) : new Date();
         const days = Array.from({ length: 7 }, (_, index) => {
@@ -88,7 +97,7 @@ const ReportsPage = () => {
                 </section>
                 <section aria-label="Conversation status mix" className={styles.panel}>
                     <div className={styles.panelHeading}><div><span className={styles.panelIcon} data-tone="teal"><FiActivity aria-hidden="true" /></span><span><h2>Status mix</h2><small>Where tickets stand</small></span></div></div>
-                    <div className={styles.statusSummary}><div className={styles.donut} style={{ background: `conic-gradient(${statusData.map((item, index) => { const previous = statusData.slice(0, index).reduce((sum, row) => sum + row.count, 0); const current = reportTickets.length ? Math.round(((previous + item.count) / reportTickets.length) * 100) : 0; return `${item.color} ${index ? statusData.slice(0, index).reduce((sum, row) => sum + row.count, 0) / Math.max(1, reportTickets.length) * 100 : 0}% ${current}%`; }).join(", ")})` }}><span><strong>{reportTickets.length}</strong><small>tickets</small></span></div><div className={styles.statusLegend}>{statusData.map((item) => <div key={item.name}><i style={{ background: item.color }} /><span>{item.name}</span><strong>{item.count}</strong></div>)}</div></div>
+                    <div className={styles.statusSummary}><div className={styles.donut} style={{ background: statusGradient }}><span><strong>{reportTickets.length}</strong><small>tickets</small></span></div><div className={styles.statusLegend}>{statusData.map((item) => <div key={item.name}><i style={{ background: item.color }} /><span>{item.name}</span><strong>{item.count}</strong></div>)}</div></div>
                 </section>
                 <section aria-label="Tickets by channel" className={styles.panel}>
                     <div className={styles.panelHeading}><div><span className={styles.panelIcon} data-tone="amber"><FiMail aria-hidden="true" /></span><span><h2>Channels</h2><small>How customers reach your team</small></span></div></div>
