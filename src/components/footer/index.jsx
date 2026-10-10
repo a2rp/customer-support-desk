@@ -1,4 +1,4 @@
-import { FaFacebookF, FaGithub, FaLinkedinIn, FaYoutube } from "react-icons/fa";
+import { FaFacebookF, FaGithub, FaLinkedinIn, FaPatreon, FaYoutube } from "react-icons/fa";
 import { FiCodepen, FiCoffee, FiGlobe, FiHeart, FiMail } from "react-icons/fi";
 import { Tooltip } from "react-tooltip";
 import styles from "./styles.module.css";
@@ -13,6 +13,7 @@ const links = [
     { label: "Email", detail: "ash.ranjan09@gmail.com", href: "mailto:ash.ranjan09@gmail.com", icon: FiMail },
     { label: "Support", detail: "a2rp-donation-page.netlify.app", href: "https://a2rp-donation-page.netlify.app/", icon: FiHeart },
     { label: "Buy Me a Coffee", detail: "buymeacoffee.com/ashishranjan", href: "https://buymeacoffee.com/ashishranjan", icon: FiCoffee },
+    { label: "Patreon", detail: "patreon.com/ashishranjan", href: "https://www.patreon.com/ashishranjan", icon: FaPatreon },
     { label: "Source code", detail: "github.com/a2rp/customer-support-desk", href: "https://github.com/a2rp/customer-support-desk", icon: FaGithub },
 ];
 
