@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { FiBarChart2, FiInbox, FiUsers, FiX } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
 import { useApp } from "../../context/useApp.js";
@@ -11,12 +12,28 @@ const navigation = [
 
 const Sidebar = () => {
     const { tickets, customers, agent, openDialog, mobileNavOpen, setMobileNavOpen } = useApp();
+    const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 720);
     const unreadCount = tickets.filter((ticket) => ticket.unread && ticket.status !== "Closed").length;
+
+    useEffect(() => {
+        const updateViewport = () => setIsMobile(window.innerWidth <= 720);
+        window.addEventListener("resize", updateViewport);
+        return () => window.removeEventListener("resize", updateViewport);
+    }, []);
+
+    useEffect(() => {
+        if (!mobileNavOpen) return undefined;
+        const closeOnEscape = (event) => {
+            if (event.key === "Escape") setMobileNavOpen(false);
+        };
+        window.addEventListener("keydown", closeOnEscape);
+        return () => window.removeEventListener("keydown", closeOnEscape);
+    }, [mobileNavOpen, setMobileNavOpen]);
 
     return (
         <>
             <button aria-label="Close navigation" className={mobileNavOpen ? styles.backdropOpen : styles.backdrop} onClick={() => setMobileNavOpen(false)} tabIndex={mobileNavOpen ? 0 : -1} type="button" />
-            <aside aria-hidden={!mobileNavOpen && window.innerWidth <= 720} className={mobileNavOpen ? styles.sidebarOpen : styles.sidebar}>
+            <aside aria-hidden={isMobile && !mobileNavOpen} className={mobileNavOpen ? styles.sidebarOpen : styles.sidebar} inert={isMobile && !mobileNavOpen ? true : undefined}>
                 <NavLink aria-label="Relay inbox" className={styles.brand} onClick={() => setMobileNavOpen(false)} to="/inbox">
                     <span className={styles.brandIcon} aria-hidden="true"><FiInbox /></span>
                     <span><strong>relay<span>.</span></strong><small>SUPPORT DESK</small></span>
