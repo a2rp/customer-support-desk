@@ -200,7 +200,6 @@
         min-height: 0;
         flex: 1;
         overflow: auto;
-        overscroll-behavior: contain;
     }
 
     .ticketButton,
@@ -295,7 +294,7 @@
     .sla { display: inline-flex; align-items: center; gap: 5px; margin-left: auto; color: #8d6a31; font-size: 13px; white-space: nowrap; }
     .sla svg { width: 14px; height: 14px; }
 
-    .messages { min-height: 0; flex: 1; overflow: auto; padding: 16px 19px 8px; overscroll-behavior: contain; }
+    .messages { min-height: 0; flex: 1; overflow: auto; padding: 16px 19px 8px; }
     .dayDivider { display: flex; align-items: center; gap: 10px; margin: 3px 0 17px; color: #9aa3b5; font-size: 13px; }
     .dayDivider::before,
     .dayDivider::after { height: 1px; flex: 1; background: #edf0f5; content: ""; }
