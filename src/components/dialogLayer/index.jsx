@@ -15,7 +15,7 @@ const DialogLayer = () => {
     let content = null;
 
     if (type === "ticketForm") {
-        content = <TicketForm onClose={closeDialog} onCreated={(ticket) => { closeDialog(); navigate(`/inbox?ticket=${encodeURIComponent(ticket.id)}`); }} />;
+        content = <TicketForm defaultCustomerId={data.customerId || ""} onClose={closeDialog} onCreated={(ticket) => { closeDialog(); navigate(`/inbox?ticket=${encodeURIComponent(ticket.id)}`); }} />;
     } else if (type === "customerForm") {
         const customer = customers.find((item) => item.id === data.customerId);
         content = <CustomerForm customer={customer} onClose={closeDialog} onSave={(values) => { if (customer) updateCustomer(customer.id, values); else addCustomer(values); closeDialog(); }} />;

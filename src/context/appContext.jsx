@@ -72,7 +72,7 @@ const AppProvider = ({ children }) => {
     const addTicket = (values) => {
         const id = `RL-${Math.floor(4900 + Math.random() * 99)}`;
         const now = new Date().toISOString();
-        const ticket = { ...values, id, status: "Open", assignedTo: values.assignedTo || null, unread: false, channel: values.channel || "Email", tags: values.tags || [], createdAt: now, updatedAt: now, messages: [{ id: makeId("message"), author: values.customerName, role: "customer", time: "Just now", text: values.initialMessage }] };
+        const ticket = { ...values, id, status: "Open", assignedTo: values.assignedTo || (teamSettings.autoAssign ? agent : null), unread: false, channel: values.channel || "Email", tags: values.tags || [], createdAt: now, updatedAt: now, messages: [{ id: makeId("message"), author: values.customerName, role: "customer", time: "Just now", text: values.initialMessage }] };
         setTickets((current) => [ticket, ...current]);
         logActivity(`Created ticket ${id}`);
         addToast(`Ticket ${id} created`);

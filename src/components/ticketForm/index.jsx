@@ -4,9 +4,9 @@ import { useApp } from "../../context/useApp.js";
 import Modal from "../modal";
 import styles from "./styles.module.css";
 
-const TicketForm = ({ onClose, onCreated }) => {
-    const { customers, agents, agent, addTicket } = useApp();
-    const [values, setValues] = useState({ customerId: "", subject: "", priority: "Normal", channel: "Email", assignedTo: agent, tags: "", initialMessage: "" });
+const TicketForm = ({ defaultCustomerId = "", onClose, onCreated }) => {
+    const { customers, agents, addTicket } = useApp();
+    const [values, setValues] = useState({ customerId: defaultCustomerId, subject: "", priority: "Normal", channel: "Email", assignedTo: "", tags: "", initialMessage: "" });
     const [error, setError] = useState("");
     const setField = (field) => (event) => setValues((current) => ({ ...current, [field]: event.target.value }));
 
@@ -27,7 +27,7 @@ const TicketForm = ({ onClose, onCreated }) => {
                 <label className={styles.wide}>Subject <input autoComplete="off" maxLength={100} onChange={setField("subject")} placeholder="What does the customer need help with?" value={values.subject} /></label>
                 <label>Priority <select onChange={setField("priority")} value={values.priority}><option>Low</option><option>Normal</option><option>High</option><option>Urgent</option></select></label>
                 <label>Channel <select onChange={setField("channel")} value={values.channel}><option>Email</option><option>Chat</option><option>Web</option></select></label>
-                <label>Assignee <select onChange={setField("assignedTo")} value={values.assignedTo}>{agents.map((person) => <option key={person}>{person}</option>)}<option value="">Unassigned</option></select></label>
+                <label>Assignee <select onChange={setField("assignedTo")} value={values.assignedTo}><option value="">Unassigned</option>{agents.map((person) => <option key={person}>{person}</option>)}</select></label>
                 <label>Tags <input onChange={setField("tags")} placeholder="billing, onboarding" value={values.tags} /></label>
                 <label className={styles.wide}>First message <textarea maxLength={1200} onChange={setField("initialMessage")} placeholder="Add the customer's message or a clear summary..." rows={5} value={values.initialMessage} /></label>
                 {error && <p className={styles.error} role="alert">{error}</p>}
