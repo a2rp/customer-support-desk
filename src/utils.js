@@ -1,3 +1,11 @@
+const getToday = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+};
+
 const getCustomer = (customers, customerId) =>
     customers.find((customer) => customer.id === customerId);
 
@@ -20,15 +28,28 @@ const formatMessageTime = (value) => new Intl.DateTimeFormat("en", {
 const downloadCsv = (rows, fileName) => {
     if (!rows.length) return false;
     const columns = Object.keys(rows[0]);
-    const quote = (value) => `"${String(value ?? "").replaceAll('"', '""')}"`;
-    const csv = [columns.map(quote).join(","), ...rows.map((row) => columns.map((column) => quote(row[column])).join(","))].join("\r\n");
-    const url = URL.createObjectURL(new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" }));
+    const quote = (value) => {
+        const cell = String(value ?? "");
+        const safeCell = ["=", "+", "-", "@"].includes(cell.trimStart()[0])
+            ? "'" + cell
+            : cell;
+        return `"${safeCell.replaceAll('"', '""')}"`;
+    };
+    const csv = [
+        columns.map(quote).join(","),
+        ...rows.map((row) => columns.map((column) => quote(row[column])).join(",")),
+    ].join("\r\n");
+    const url = URL.createObjectURL(
+        new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" }),
+    );
     const anchor = document.createElement("a");
     anchor.href = url;
     anchor.download = fileName;
+    document.body.append(anchor);
     anchor.click();
+    anchor.remove();
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     return true;
 };
 
-export { downloadCsv, formatMessageTime, formatRelativeTime, getCustomer };
+export { downloadCsv, formatMessageTime, formatRelativeTime, getCustomer, getToday };
