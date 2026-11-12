@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FiActivity, FiArrowUpRight, FiBarChart2, FiCheckCircle, FiDownload, FiInbox, FiMail, FiMessageCircle, FiUsers, FiZap } from "react-icons/fi";
 import { useApp } from "../../context/useApp.js";
 import { downloadCsv, getCustomer } from "../../utils.js";
@@ -7,12 +7,22 @@ import styles from "./styles.module.css";
 const ReportsPage = () => {
     const { tickets, customers, agents, addToast } = useApp();
     const [range, setRange] = useState("7 days");
+    const [now, setNow] = useState(() => new Date());
+
+    useEffect(() => {
+        const interval = window.setInterval(() => setNow(new Date()), 60_000);
+        return () => window.clearInterval(interval);
+    }, []);
+
     const reportTickets = useMemo(() => {
         if (range === "All time") return tickets;
-        const cutoff = new Date();
+        const cutoff = new Date(now);
         cutoff.setDate(cutoff.getDate() - (range === "7 days" ? 7 : 30));
-        return tickets.filter((ticket) => new Date(ticket.createdAt) >= cutoff);
-    }, [range, tickets]);
+        return tickets.filter((ticket) => {
+            const createdAt = new Date(ticket.createdAt);
+            return createdAt >= cutoff && createdAt <= now;
+        });
+    }, [now, range, tickets]);
     const totals = {
         open: reportTickets.filter((ticket) => ticket.status === "Open").length,
         pending: reportTickets.filter((ticket) => ticket.status === "Pending").length,
@@ -40,7 +50,8 @@ const ReportsPage = () => {
         }).join(", ")})`
         : "conic-gradient(#e8ecf4 0 100%)";
     const ticketVolume = useMemo(() => {
-        const latest = tickets.length ? new Date(Math.max(...tickets.map((ticket) => new Date(ticket.createdAt).getTime()))) : new Date();
+        const latest = new Date(now);
+        latest.setHours(0, 0, 0, 0);
         const days = Array.from({ length: 7 }, (_, index) => {
             const date = new Date(latest);
             date.setDate(date.getDate() - 6 + index);
@@ -49,7 +60,7 @@ const ReportsPage = () => {
         });
         const maximum = Math.max(1, ...days.map((day) => day.count));
         return days.map((day) => ({ ...day, height: Math.max(7, Math.round((day.count / maximum) * 100)) }));
-    }, [reportTickets, tickets]);
+    }, [now, reportTickets]);
     const tagData = useMemo(() => {
         const counts = new Map();
         reportTickets.forEach((ticket) => ticket.tags.forEach((tag) => counts.set(tag, (counts.get(tag) || 0) + 1)));
